@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    command: --bind-address=0.0.0.0
+    container_name: mysql_server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: hazamR
+      MYSQL_DATABASE: asistencia
+      MYSQL_USER: hazam
+      MYSQL_PASSWORD: hazamR
+    ports:
+        - "3306:3306" 
+    volumes:
+        - mysql_data:/var/lib/mysql
+
+    networks:
+        - mysql_network
+
+volumes:
+     mysql_data:
+        driver: local
+networks:
+        mysql_network:
+            driver: bridge
