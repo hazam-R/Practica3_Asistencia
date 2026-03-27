@@ -27,6 +27,7 @@ namespace Practica3_Asistencia.Forms
 
         private void CargarAlumnos()
         {
+
             //Limpiar todo antes de volver a cargar
             dgvAlumnos.DataSource = null;
             dgvAlumnos.Columns.Clear();
@@ -59,6 +60,9 @@ namespace Practica3_Asistencia.Forms
                 chk.FalseValue = false;
                 dgvAlumnos.Columns.Add(chk);
 
+                int asistieron = 0;
+                int faltaron = 0;
+
                 // Llenar checkboxes según lo que ya hay en BD en caso de que haya regstros
                 foreach (DataGridViewRow fila in dgvAlumnos.Rows)
                 {
@@ -67,13 +71,21 @@ namespace Practica3_Asistencia.Forms
                     // Si asistencia es null significa que no hay registro ese día
                     if (fila.Cells["asistencia"].Value != DBNull.Value)
                     {
+                        bool asistio = Convert.ToBoolean(fila.Cells["asistencia"].Value);
                         fila.Cells["chkAsistencia"].Value = Convert.ToBoolean(fila.Cells["asistencia"].Value);
+
+                        if (asistio) asistieron++;
+                        else faltaron++;
                     }
                     else
                     {
                         fila.Cells["chkAsistencia"].Value = false;
+                        faltaron++; // sin registro cuenta como falta
                     }
                 }
+                lblAsistieron.Text = asistieron.ToString();
+                lblFaltaron.Text = faltaron.ToString();
+                PintarFilas();
             }
         }
 
@@ -123,6 +135,73 @@ namespace Practica3_Asistencia.Forms
                 dgvAlumnos.Columns.Remove("chkAsistencia");
             }
             CargarAlumnos();
+        }
+
+        private void tbNoControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // quita el sonido
+
+                if (string.IsNullOrWhiteSpace(tbNoControl.Text)) return;
+
+                string nocontrol = tbNoControl.Text;
+                bool encontrado = false;
+
+                foreach (DataGridViewRow fila in dgvAlumnos.Rows)
+                {
+                    if (fila.Cells["nocontrol"].Value?.ToString() == nocontrol)
+                    {
+                        bool valorActual = Convert.ToBoolean(fila.Cells["chkAsistencia"].Value);
+                        fila.Cells["chkAsistencia"].Value = !valorActual;
+                        encontrado = true;
+                        ActualizarContadores();
+                        break;
+                    }
+                }
+                tbNoControl.Text = "";
+
+            }
+        }
+        private void ActualizarContadores()
+        {
+            int asistieron = 0;
+            int faltaron = 0;
+
+            foreach (DataGridViewRow fila in dgvAlumnos.Rows)
+            {
+                if (fila.IsNewRow) continue; // esto evita contar filas de más
+                if (fila.Cells["chkAsistencia"].Value == null) continue; // evita nulls
+
+                bool asistio = Convert.ToBoolean(fila.Cells["chkAsistencia"].Value);
+                if (asistio) asistieron++;
+                else faltaron++;
+
+                PintarFilas();
+            }
+
+            lblAsistieron.Text = asistieron.ToString();
+            lblFaltaron.Text = faltaron.ToString();
+            
+        }
+
+        private void PintarFilas()
+        {
+            foreach (DataGridViewRow fila in dgvAlumnos.Rows)
+            {
+                if (fila.IsNewRow) continue;
+
+                object valor = fila.Cells["chkAsistencia"].Value;
+
+                if (valor == null || valor == DBNull.Value) continue;
+
+                bool asistio = Convert.ToBoolean(valor);
+
+                if (asistio)
+                    fila.DefaultCellStyle.BackColor = Color.LightGreen;
+                else
+                    fila.DefaultCellStyle.BackColor = Color.IndianRed;
+            }
         }
     }
 }

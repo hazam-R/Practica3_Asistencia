@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using OfficeOpenXml;
 using Practica3_Asistencia.Forms;
 using System.Data;
@@ -10,6 +11,7 @@ namespace Practica3_Asistencia
     {
         Datos datos = new Datos();
         DataSet ds;
+        int filaSeleccionada = -1;
 
         public frmMateria()
         {
@@ -69,7 +71,43 @@ namespace Practica3_Asistencia
             }
         }
 
-        private void btnImportar_Click(object sender, EventArgs e)
+
+
+        private void asistenciaToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            frmAsistencia asistencia = new frmAsistencia();
+            asistencia.Show();
+        }
+
+        private void dtpHoy_ValueChanged(object sender, EventArgs e)
+        {
+            Busqueda();
+        }
+
+        private void dgvAlumnos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Evitar que truene si hacen clic en el encabezado
+            if (e.RowIndex < 0) return;
+
+            string nocontrol = dgvAlumnos.Rows[e.RowIndex].Cells["nocontrol"].Value.ToString();
+
+            // Abrir form de historial pasando el nocontrol
+            frmHistorial historial = new frmHistorial(nocontrol);
+            historial.Show();
+        }
+
+
+
+        private void agregarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmRegistro registro = new frmRegistro();
+            // Cuando Form2 se cierre, ejecuta CargarDatos()
+            registro.FormClosed += (s, args) => Busqueda();
+            registro.Show();
+
+        }
+
+        private void importarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             String path;
             DialogResult dr = ofdExcel.ShowDialog();
@@ -111,27 +149,29 @@ namespace Practica3_Asistencia
             }
         }
 
-        private void asistenciaToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void eliminarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmAsistencia asistencia = new frmAsistencia();
-            asistencia.Show();
+            int nocontrol = Convert.ToInt32(dgvAlumnos.CurrentRow.Cells[0].Value);
+
+            if (MessageBox.Show("Deseas eliminar al alumno: " + dgvAlumnos.CurrentRow.Cells[1].Value.ToString() + " " + dgvAlumnos.CurrentRow.Cells[2].Value.ToString() + " " + dgvAlumnos.CurrentRow.Cells[3].Value.ToString(), "Sistema", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                bool f = datos.ejecutarComando($"Delete from Alumnos where nocontrol = " + $"'{nocontrol}'");
+                if (f)
+                {
+                    MessageBox.Show("Registro Eliminado", "Sistema");
+                }
+                else
+                {
+                    MessageBox.Show("Error", "Sistema");
+                }
+            }
         }
 
-        private void dtpHoy_ValueChanged(object sender, EventArgs e)
+        private void modificarToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            Busqueda();
-        }
-
-        private void dgvAlumnos_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Evitar que truene si hacen clic en el encabezado
-            if (e.RowIndex < 0) return;
-
-            string nocontrol = dgvAlumnos.Rows[e.RowIndex].Cells["nocontrol"].Value.ToString();
-
-            // Abrir form de historial pasando el nocontrol
-            frmHistorial historial = new frmHistorial(nocontrol);
-            historial.Show();
+            frmModificar modi = new frmModificar(dgvAlumnos.CurrentRow.Cells[0].Value.ToString());
+            modi.FormClosed += (s, args) => Busqueda();
+            modi.Show();
         }
     }
 }

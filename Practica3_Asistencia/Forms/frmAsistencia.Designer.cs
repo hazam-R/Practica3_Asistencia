@@ -31,6 +31,12 @@
             label1 = new Label();
             dtpFecha = new DateTimePicker();
             splitContainer1 = new SplitContainer();
+            lblFaltaron = new Label();
+            lblAsistieron = new Label();
+            label3 = new Label();
+            label2 = new Label();
+            Registro = new Label();
+            tbNoControl = new TextBox();
             btnGuardar = new Button();
             dgvAlumnos = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -66,6 +72,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(lblFaltaron);
+            splitContainer1.Panel1.Controls.Add(lblAsistieron);
+            splitContainer1.Panel1.Controls.Add(label3);
+            splitContainer1.Panel1.Controls.Add(label2);
+            splitContainer1.Panel1.Controls.Add(Registro);
+            splitContainer1.Panel1.Controls.Add(tbNoControl);
             splitContainer1.Panel1.Controls.Add(btnGuardar);
             splitContainer1.Panel1.Controls.Add(dtpFecha);
             splitContainer1.Panel1.Controls.Add(label1);
@@ -77,9 +89,62 @@
             splitContainer1.SplitterDistance = 104;
             splitContainer1.TabIndex = 2;
             // 
+            // lblFaltaron
+            // 
+            lblFaltaron.AutoSize = true;
+            lblFaltaron.Location = new Point(668, 68);
+            lblFaltaron.Name = "lblFaltaron";
+            lblFaltaron.Size = new Size(13, 20);
+            lblFaltaron.TabIndex = 8;
+            lblFaltaron.Text = " ";
+            // 
+            // lblAsistieron
+            // 
+            lblAsistieron.AutoSize = true;
+            lblAsistieron.Location = new Point(687, 38);
+            lblAsistieron.Name = "lblAsistieron";
+            lblAsistieron.Size = new Size(13, 20);
+            lblAsistieron.TabIndex = 7;
+            lblAsistieron.Text = " ";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(582, 69);
+            label3.Name = "label3";
+            label3.Size = new Size(62, 20);
+            label3.TabIndex = 6;
+            label3.Text = "Faltaron";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(582, 38);
+            label2.Name = "label2";
+            label2.Size = new Size(64, 20);
+            label2.TabIndex = 5;
+            label2.Text = "Vinieron";
+            // 
+            // Registro
+            // 
+            Registro.AutoSize = true;
+            Registro.Location = new Point(643, 9);
+            Registro.Name = "Registro";
+            Registro.Size = new Size(75, 20);
+            Registro.TabIndex = 4;
+            Registro.Text = "Asistencia";
+            // 
+            // tbNoControl
+            // 
+            tbNoControl.Location = new Point(49, 66);
+            tbNoControl.Name = "tbNoControl";
+            tbNoControl.Size = new Size(305, 27);
+            tbNoControl.TabIndex = 3;
+            tbNoControl.KeyUp += tbNoControl_KeyUp;
+            // 
             // btnGuardar
             // 
-            btnGuardar.Location = new Point(347, 57);
+            btnGuardar.Location = new Point(418, 64);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(101, 29);
             btnGuardar.TabIndex = 2;
@@ -123,5 +188,10 @@
         private SplitContainer splitContainer1;
         private Button btnGuardar;
         private DataGridView dgvAlumnos;
+        private TextBox tbNoControl;
+        private Label Registro;
+        private Label lblFaltaron;
+        private Label lblAsistieron;
+        private Label label2;
     }
 }
