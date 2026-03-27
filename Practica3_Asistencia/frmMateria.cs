@@ -172,6 +172,7 @@ namespace Practica3_Asistencia
             frmModificar modi = new frmModificar(dgvAlumnos.CurrentRow.Cells[0].Value.ToString());
             modi.FormClosed += (s, args) => Busqueda();
             modi.Show();
+            tbBusqueda.Text = "";
         }
     }
 }
